@@ -13,6 +13,7 @@
   "author": "Jordan Biesmans (jbs.io@protonmail.com)",
   "license": "MIT",
   "devDependencies": {
+    "@faker-js/faker": "^8.0.1",
     "@jest/globals": "^29.5.0",
     "@jest/types": "^29.5.0",
     "@types/express": "",

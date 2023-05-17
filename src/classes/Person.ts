@@ -60,16 +60,13 @@ export class Person {
 
   static generateMultipleOfEightGroups(persons: Person[]): Person[][] {
     if (persons.length < 16) {
-      throw new PersonException("Le nombre de personnes doit être supérieur ou égal à 16 pour générer des groupes multiples de 8.");
-    }
-
-    if (persons.length % 8 !== 0) {
-      throw new PersonException("Le nombre de personnes ne permet pas d'obtenir des groupes multiples de 8.");
+      throw new PersonException("Le nombre de personnes ne permet pas d'obtenir au moins 2 groupes.");
     }
 
     const clonedPersons = [...persons];
 
-    const groupCount = persons.length / 8;
+    const groupCount = Math.floor(persons.length / 8);
+    const remainingCount = persons.length % 8;
     const groups: Person[][] = [];
 
     for (let i = 0; i < groupCount; i++) {
@@ -82,6 +79,17 @@ export class Person {
       }
 
       groups.push(group);
+    }
+
+    if (remainingCount > 0) {
+      const remainingGroup: Person[] = [];
+      for (let i = 0; i < remainingCount; i++) {
+        const randomIndex = Math.floor(Math.random() * clonedPersons.length);
+        const person = clonedPersons.splice(randomIndex, 1)[0];
+        remainingGroup.push(person);
+      }
+
+      groups.push(remainingGroup);
     }
 
     return groups;

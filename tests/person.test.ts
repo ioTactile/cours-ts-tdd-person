@@ -133,7 +133,28 @@ describe("Person", () => {
       });
     });
 
-    test("devrait générer une erreur si le nombre de personnes est inférieur à 16", () => {
+    test("devrait générer des groupes partiellement déséquilibrés", () => {
+      const persons: Person[] = [];
+      for (let i = 0; i < 27; i++) {
+        const firstname = faker.person.firstName();
+        const lastname = faker.person.lastName();
+        const person = new Person(firstname, lastname);
+        persons.push(person);
+      }
+
+      const groups = Person.generateMultipleOfEightGroups(persons);
+
+      expect(groups.length).toBe(4);
+
+      groups.slice(0, -1).forEach((group) => {
+        expect(group.length).toBe(8);
+      });
+
+      const lastGroup = groups[groups.length - 1];
+      expect(lastGroup.length).toBe(3);
+    });
+
+    test("devrait générer une erreur si le nombre de personnes ne permet pas d'obtenir au moins 2 groupes", () => {
       const persons: Person[] = [];
       for (let i = 0; i < 15; i++) {
         const firstname = faker.person.firstName();
@@ -144,21 +165,7 @@ describe("Person", () => {
 
       expect(() => {
         Person.generateMultipleOfEightGroups(persons);
-      }).toThrowError(new PersonException('Le nombre de personnes doit être supérieur ou égal à 16 pour générer des groupes multiples de 8.'));
-    });
-
-    test("devrait générer une erreur si le nombre de personnes ne permet pas d'obtenir des groupes multiples de 8", () => {
-      const persons: Person[] = [];
-      for (let i = 0; i < 18; i++) {
-        const firstname = faker.person.firstName();
-        const lastname = faker.person.lastName();
-        const person = new Person(firstname, lastname);
-        persons.push(person);
-      }
-
-      expect(() => {
-        Person.generateMultipleOfEightGroups(persons);
-      }).toThrowError(new PersonException('Le nombre de personnes ne permet pas d\'obtenir des groupes multiples de 8.'));
+      }).toThrowError(new PersonException("Le nombre de personnes ne permet pas d'obtenir au moins 2 groupes."));
     });
   });
 });
